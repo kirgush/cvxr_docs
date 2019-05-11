@@ -1,10 +1,9 @@
 ---
-title: Introduction
-author: Anqi Fu and Balasubramanian Narasimhan
+title: "Introduction"
+author: "Anqi Fu and Balasubramanian Narasimhan"
 date: '2017-10-29'
-categories:
-  - Simple Least Squares
 slug: cvxr_intro
+categories: Simple Least Squares
 ---
 
 Consider a simple linear regression problem where it is desired to
@@ -182,19 +181,19 @@ knitr::kable(A, format = "html") %>%
 
 The sum constraint is nothing but 
 $$
-A\beta < 0
+A\beta \leq 0
 $$
 
 which we express in R as
 
 ```{r}
-constraint1 <- A %*% betaHat < 0
+constraint1 <- A %*% betaHat <= 0
 ```
 
 _NOTE_: The above constraint can also be expressed simply as
 
 ```{r, eval = FALSE}
-constraint1 <- betaHat[2] + betaHat[3] < 0
+constraint1 <- betaHat[2] + betaHat[3] <= 0
 ```
 but it is easier working with matrices in general with `CVXR`. 
 
@@ -213,13 +212,13 @@ knitr::kable(B, format = "html") %>%
 
 The constraint for positivity is 
 $$
-B\beta > 0
+B\beta \geq 0
 $$
 
 which we express in R as 
 
 ```{r}
-constraint2 <- B %*% betaHat > 0
+constraint2 <- B %*% betaHat >= 0
 ```
 Now we are ready to solve the problem just as before. 
 
