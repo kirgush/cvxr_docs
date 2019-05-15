@@ -78,7 +78,7 @@ In `R`, we first define the estimation and loss functions:
 ## Saturating hinge
 f_est <- function(x, knots, w0, w) {
     hinges <- sapply(knots, function(t) { pmax(x - t, 0) })
-    w0 + hinges %*% w
+    w0[1] + hinges %*% w
 }
 
 ## Loss function
