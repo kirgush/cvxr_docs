@@ -76,7 +76,7 @@ quant_loss <- function(u, tau) { 0.5 * abs(u) + (tau - 0.5) * u }
 solutions <- sapply(taus, function(tau) {
     obj <- sum(quant_loss(y - X %*% beta, t = tau))
     prob <- Problem(Minimize(obj))
-    solve(prob)$getValue(beta)
+    solve(prob, solver = "ECOS")$getValue(beta)
 })
 solutions <- data.frame(coef(lm(foodexp ~ income, data = engel)),
                         solutions)
