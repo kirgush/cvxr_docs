@@ -85,11 +85,11 @@ suppressMessages(suppressWarnings(library(survey)))
 data(api)
 design_api <- svydesign(id = ~dnum, weights = ~pw, data = apisrs)
 formula <- ~stype + sch.wide
-T <- apply(model.matrix(object = formula, data = apipop),
+Tmat <- apply(model.matrix(object = formula, data = apipop),
            2,
            sum)
 
-cal_api <- calibrate(design_api, formula, population = T, calfun = cal.raking)
+cal_api <- calibrate(design_api, formula, population = Tmat, calfun = cal.raking)
 w_survey <- weights(cal_api)
 ```
 
@@ -102,7 +102,7 @@ X <- model.matrix(object = formula, data = apisrs)
 A <- di * X
 n <- nrow(apisrs)
 g <- Variable(n)
-constraints <- list(t(A) %*% g == T)
+constraints <- list(t(A) %*% g == Tmat)
 
 ## Raking
 Phi_R <- Minimize(sum(di * (-entr(g) - g + 1)))
@@ -147,7 +147,7 @@ Phi_Q  <- Minimize(sum_squares(g - 1) / 2)
 p <- Problem(Phi_Q, constraints)
 res <- solve(p, solver = "SCS")
 w_cvxr_q <- di * res$getValue(g)
-w_survey_q <- weights(calibrate(design_api, formula, population = T, calfun = cal.linear))
+w_survey_q <- weights(calibrate(design_api, formula, population = Tmat, calfun = cal.linear))
 ```
 
 Note the use of the `SCS` solver above; the default `ECOS` solver
@@ -168,7 +168,7 @@ coefficients; we use $l=0.9$ and $u=1.1$.
 
 ```{r}
 u <- 1.10; l <- 0.90
-w_survey_l <- weights(calibrate(design_api, formula, population = T, calfun = cal.linear,
+w_survey_l <- weights(calibrate(design_api, formula, population = Tmat, calfun = cal.linear,
                                 bounds = c(l, u)))
 Phi_L <- Minimize(sum(-entr((g - l) / (u - l))  -
                       entr((u - g) / (u - l)))) 
@@ -193,7 +193,7 @@ First, the hellinger distance.
 hellinger <- make.calfun(Fm1 = function(u, bounds)  ((1 - u / 2)^-2) - 1,
                          dF= function(u, bounds) (1 -u / 2)^-3 ,
                          name = "Hellinger distance")
-w_survey_h <- weights(calibrate(design_api, formula, population = T, calfun = hellinger))
+w_survey_h <- weights(calibrate(design_api, formula, population = Tmat, calfun = hellinger))
 Phi_h <- Minimize(sum((1 - g / 2)^(-2)))
 p <- Problem(Phi_h, constraints)
 res <- solve(p)
@@ -209,7 +209,7 @@ build_table(d1 = build_df(apisrs, "Survey", w_survey_h),
 Next, the derivative of the inverse hyperbolic sine. 
 
 ```{r}
-w_survey_s <- weights(calibrate(design_api, formula, population = T, calfun = cal.sinh,
+w_survey_s <- weights(calibrate(design_api, formula, population = Tmat, calfun = cal.sinh,
                                 bounds = c(l, u)))
 Phi_s <- Minimize(sum( 0.5 * (exp(g) + exp(-g))))
 p <- Problem(Phi_s, c(constraints, list(l <= g, g <= u)))
