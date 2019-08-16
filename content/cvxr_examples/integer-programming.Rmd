@@ -95,12 +95,12 @@ constraints <- list(
 problem <- Problem(objective, constraints)
 ```
 
-We can solve this problem as usual using the default `ECOS` (actually
+We can solve this problem as usual using the `ECOS` (actually
 `ECOS_BB`) solver and obtain the optimal value as well as the
 solution. 
 
 ```{r}
-result <- solve(problem)
+result <- solve(problem, solver = "ECOS_BB")
 cat(sprintf("Optimal value: %.3f\n", result$value))
 ecos_solution <- result$getValue(x)
 ```
@@ -108,14 +108,14 @@ ecos_solution <- result$getValue(x)
 ## Alternative Solvers
 
 We can try other solvers and compare the solutions obtained, like
-`LPSOLVE` and `GLPK` provided the respective R packages are installed
+`CBC` and `GLPK` (via `GLPK_MI`) provided the respective R packages are installed
 as documented in the tutorial [Using Other
 Solvers](/cvxr_examples/using-other-solvers/).
 
 ```{r}
-result <- solve(problem, solver = "LPSOLVE")
-lpsolve_solution <- result$getValue(x)
-result <- solve(problem, solver = "GLPK")
+result <- solve(problem, solver = "CBC")
+cbc_solution <- result$getValue(x)
+result <- solve(problem, solver = "GLPK_MI")
 glpk_solution <- result$getValue(x)
 ```
 
@@ -131,7 +131,7 @@ Below is the table is solutions from all the solvers we used.
 
 ```{r}
 solutions <- data.frame(ECOS = ecos_solution,
-                        LPSOLVE = lpsolve_solution,
+                        CBC = cbc_solution,
                         GLPK = glpk_solution,
                         GUROBI = gurobi_solution)
 row.names(solutions) <- c("$x_1$", "$x_2$", "$x_3$", "$x_4$")
@@ -205,7 +205,7 @@ weighted by seniority constrained by the fact the a person can only
 occupy a single office and no office can have more than 1 person.
 
 ```{r}
-objective <- Maximize(sum_entries(mul_elemwise(PM, occupy)))
+objective <- Maximize(sum_entries(multiply(PM, occupy)))
 constraints <- list(
     occupy >= 0,
     occupy <= 1,
@@ -246,7 +246,7 @@ We are now ready to solve the problem.
 
 ```{r}
 problem <- Problem(objective, constraints)
-ecos_result <- solve(problem)
+ecos_result <- solve(problem, solver = "ECOS_BB")
 ecos_soln <- round(ecos_result$getValue(occupy), 0)
 rownames(ecos_soln) <- people
 colnames(ecos_soln) <- offices

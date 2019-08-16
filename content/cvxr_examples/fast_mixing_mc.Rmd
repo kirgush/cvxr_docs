@@ -104,7 +104,8 @@ FMMC <- function(g, verbose = FALSE) {
         }
     }
     prob <- Problem(objective, constraints)
-    result <- solve(prob)
+    # TODO: result <- solve(prob)
+    result <- solve(prob, solver = "SCS")
     if(verbose)
         cat("Status: ", result$status, ", Optimal Value = ", result$value)
     list(status = result$status, value = result$value, P = result$getValue(P))
