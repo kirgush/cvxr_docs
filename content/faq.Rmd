@@ -26,7 +26,7 @@ Your best bet is to go through the examples in the @BoydVandenberghe:2004 book a
 3. <a name="bug"></a>I want to report a bug.
 
 Please open an issue on the [CVXR Github
-Issues](https://github.com/anqif/CVXR/issues) page with a
+Issues](https://github.com/cvxgrp/CVXR/issues) page with a
 reproducible example. 
 
 # References

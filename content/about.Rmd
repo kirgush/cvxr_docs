@@ -33,10 +33,10 @@ available
 ## News
 
 For the latest news, please see the [Package
-Documentation](https://anqif.github.io/CVXR). 
+Documentation](https://cran.r-project.org/web/packages/CVXR/CVXR.pdf). 
 
 `CVXR` continues to be developed
-on [Github](https://github.com/anqif). The current release implements all of
+on [Github](https://github.com/cvxgrp/CVXR). The current release implements all of
 the `CVXPY` atoms except for `geo_mean` and parameters. The latter is
 not an impediment since any parameter can be replaced by a variable.
 
