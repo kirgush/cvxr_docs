@@ -1,0 +1,22 @@
+---
+title: Issues to heed
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2019-08-30'
+---
+
+## Issues with `CVXR` 1.0
+
+- Gurobi solver. This affects `integer-programming.Rmd`.
+- Near Isotonic and Near Convex complains about `inverse_data` not
+  being available.
+- Pliable lasso complains in lines 236-237:
+```
+Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) : 
+  allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
+```
+Usually indicates something is not setting its size properly like
+	`sum_entries` did in another problem.
+- Kelly gambling gives slightly different, but not overtly wrong results. Why?  
+- Sparse Inverse Covariance Estimation definitely gives wrong results!
+- Unpack routine needs to be written.  This affects
+  `solver-peculiarities.Rmd`, `speed.Rmd` 
