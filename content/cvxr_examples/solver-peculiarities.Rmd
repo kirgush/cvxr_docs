@@ -13,7 +13,7 @@ tags: []
 suppressWarnings(suppressMessages(library(CVXR)))
 ```
 
-The default solver in `CVXR` is `ECOS`. However, it is not always the
+The standard cone solver in `CVXR` is `ECOS`. However, it is not always the
 best solver to use. As an example, let us consider again the [catenary
 problem](/cvxr_examples/cvxr_catenary/). 
 
@@ -38,7 +38,7 @@ constraints <- list(x[1] == 0, y[1] == 1,
 
 ## Solve the catenary problem
 prob <- Problem(objective, constraints)
-result <- solve(prob)
+result <- solve(prob, solver = "ECOS")
 ```
 
 The solution status is no longer optimal.

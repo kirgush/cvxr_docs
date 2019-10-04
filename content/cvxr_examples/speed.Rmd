@@ -115,7 +115,7 @@ prob_data <- get_problem_data(prob, solver = "ECOS")
 ```
 
 _ASIDE_: How did we know ECOS was the solver to use? Future versions
-will provode a function to match a solver to a problem. (Actually, it
+will provide a function to match a solver to a problem. (Actually, it
 is available already, but not exported yet!). For now, a single call
 to `solve` with the verbose option set to `TRUE` can provide that
 information. 
@@ -125,22 +125,23 @@ soln <- solve(prob, verbose = TRUE)
 ```
 Now that we have the problem data and know which solver to use, we can
 call the ECOS solver with the right arguments. (The ECOS solver is
-provided by the package `ECOSolveR` which `CVXR` imports.)
+provided by the package `ECOSolveR`, which `CVXR` imports.)
 
 ```{r}
-solver_output <- ECOSolveR::ECOS_csolve(c = prob_data[["c"]],
-                                        G = prob_data[["G"]],
-                                        h = prob_data[["h"]],
-                                        dims = prob_data[["dims"]],
-                                        A = prob_data[["A"]],
-                                        b = prob_data[["b"]])
+ECOS_dims <- ECOS.dims_to_solver_dict(prob_data$data[["dims"]])
+solver_output <- ECOSolveR::ECOS_csolve(c = prob_data$data[["c"]],
+                                        G = prob_data$data[["G"]],
+                                        h = prob_data$data[["h"]],
+                                        dims = ECOS_dims,
+                                        A = prob_data$data[["A"]],
+                                        b = prob_data$data[["b"]])
 ```
 
 Finally, we can obtain the results by asking `CVXR` to _unpack_ the
 solver results for us. (See `?unpack_results` for further examples.)
 
 ```{r}
-direct_soln <- unpack_results(prob, "ECOS", solver_output)
+direct_soln <- unpack_results(prob, solver_output, prob_data$chain, prob_data$inverse_data)
 ```
 
 ## Profile the Direct Call
@@ -153,13 +154,14 @@ profvis({
     obj <- Minimize(0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta))))
     prob <- Problem(obj)
     prob_data <- get_problem_data(prob, solver = "ECOS")
-    solver_output <- ECOSolveR::ECOS_csolve(c = prob_data[["c"]],
-                                            G = prob_data[["G"]],
-                                            h = prob_data[["h"]],
-                                            dims = prob_data[["dims"]],
-                                            A = prob_data[["A"]],
-                                            b = prob_data[["b"]])
-    direct_soln <- unpack_results(prob, "ECOS", solver_output)
+    ECOS_dims <- ECOS.dims_to_solver_dict(prob_data$data[["dims"]])
+    solver_output <- ECOSolveR::ECOS_csolve(c = prob_data$data[["c"]],
+                                            G = prob_data$data[["G"]],
+                                            h = prob_data$data[["h"]],
+                                            dims = ECOS_dims,
+                                            A = prob_data$data[["A"]],
+                                            b = prob_data$data[["b"]])
+    direct_soln <- unpack_results(prob, solver_output, prob_data$chain, prob_data$inverse_data)
 })
 ```
 
