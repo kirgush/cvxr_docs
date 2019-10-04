@@ -197,7 +197,7 @@ We define the the occupancy variable which indicates, using values 1
 or 0, who occupies which office.
 
 ```{r}
-occupy <- Int(length(people), length(offices))
+occupy <- Bool(length(people), length(offices))
 ```
 
 The objective is to _maximize the satisfaction_ of the preferences
@@ -207,8 +207,6 @@ occupy a single office and no office can have more than 1 person.
 ```{r}
 objective <- Maximize(sum_entries(multiply(PM, occupy)))
 constraints <- list(
-    occupy >= 0,
-    occupy <= 1,
     sum_entries(occupy, axis = 1) == 1,
     sum_entries(occupy, axis = 2) <= 1
 )
