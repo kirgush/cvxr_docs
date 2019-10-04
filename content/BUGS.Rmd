@@ -6,10 +6,6 @@ date: '2019-08-30'
 
 ## Issues with `CVXR` 1.0
 
-- The following error occurs in line 103 of `integer-programming.Rmd`.
-```
-Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) : std::bad_alloc
-```
 - Pliable lasso complains in lines 236-237:
 ```
 Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) : 
@@ -22,6 +18,10 @@ Usually indicates something is not setting its size properly like
 
 ## Resolved Issues
 
+- The following error occurs in line 103 of `integer-programming.Rmd`.
+```
+Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) : std::bad_alloc
+```
 - Near Isotonic and Near Convex complains about `inverse_data` not
   being available.
 - Unpack routine needs to be written.  This affects
