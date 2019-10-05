@@ -6,6 +6,11 @@ date: '2019-08-30'
 
 ## Issues with `CVXR` 1.0
 
+- Pliable lasso gives different results. Not sure if wrong or a product of random data generation.
+- Kelly gambling gives slightly different, but not overtly wrong results. Why?  
+
+## Resolved Issues
+
 - Pliable lasso complains in lines 236-237:
 ```
 Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) : 
@@ -13,11 +18,6 @@ Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) :
 ```
 Usually indicates something is not setting its size properly like
 	`sum_entries` did in another problem.
-- Kelly gambling gives slightly different, but not overtly wrong results. Why?  
-- Sparse Inverse Covariance Estimation definitely gives wrong results!
-
-## Resolved Issues
-
 - The following error occurs in line 103 of `integer-programming.Rmd`.
 ```
 Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) : std::bad_alloc
@@ -26,3 +26,4 @@ Error in cvxCanon$build_matrix(lin_vec, id_to_col_C) : std::bad_alloc
   being available.
 - Unpack routine needs to be written.  This affects
   `solver-peculiarities.Rmd`, `speed.Rmd` 
+- Sparse Inverse Covariance Estimation definitely gives wrong results!
